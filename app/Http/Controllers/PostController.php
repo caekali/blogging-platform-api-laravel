@@ -67,6 +67,7 @@ class PostController extends BaseController
      */
     public function update(Request $request, $userId, $postId)
     {
+
         $validator = Validator::make($request->all(), [
             'title' => 'bail|required|string',
             'content' => 'required:string'
@@ -76,11 +77,16 @@ class PostController extends BaseController
             return ApiResponse::validationError($validator->errors());
         }
 
-        $post = Post::find($postId);
+        $post = Post::where('user_id', $userId)->find($postId);
+
         if (is_null($post)) {
             return ApiResponse::error('Post not found', 404);
         }
 
+        if ($post->user_id !== auth()->id()) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+        
         $post->title = $request->title;
         $post->content = $request->content;
 

@@ -13,10 +13,6 @@ Route::get('/profile', function (Request $request) {
 })->middleware('auth:sanctum');
 
 
-Route::post('/notify', function (Request $request) {
-    return $request->user()->notify(new MailTest());
-})->middleware('auth:sanctum');
-
 Route::controller(AuthController::class)->prefix('/auth')->group(function () {
     Route::post('/register', 'register');
     Route::post('/login', 'login');
@@ -32,6 +28,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/posts/{postId}/comments', [CommentController::class, 'getAllByPost']);
     Route::post('/posts/{postId}/comments', [CommentController::class, 'makeComment']);
-    Route::put('/posts/{postId}/comments/{commentId}',[PostController::class, 'update']);
+    Route::put('/posts/{postId}/comments/{commentId}',[CommentController::class, 'update']);
     Route::delete('/comments/{commentId}', [CommentController::class, 'destroy']);
 });

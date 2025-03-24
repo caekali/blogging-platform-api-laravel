@@ -6,6 +6,7 @@ use App\Models\Comment;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use App\Helpers\ApiResponse;
+use App\Http\Resources\CommentResource;
 use Illuminate\Support\Facades\Validator;
 
 class CommentController extends BaseController
@@ -17,7 +18,7 @@ class CommentController extends BaseController
         if (is_null($post)) {
             return ApiResponse::error('Post not found', 404);
         }
-        return $this->sendResponse($post->comments);
+        return ApiResponse::success(CommentResource::collection($post->comments));
     }
 
     public function makeComment(Request $request, $postId)
